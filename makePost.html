@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 작성</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <header class="header">
+            <button 
+                type="button" 
+                class="back-button"
+                id="backButton"
+            >
+                ‹
+            </button>
+
+            아무 말 대잔치
+
+            <div class="profile-menu-wrap">
+                <button type="button" class="header-profile-button" id="profileButton">
+                    <img src="./images/profile.png" alt="프로필 이미지">
+                </button>
+
+                <div class="profile-dropdown" id="profileDropdown">
+                    <button type="button" class="dropdown-link" data-link="editProfile.html">
+                        회원정보수정
+                    </button>
+                    <button type="button" class="dropdown-link" data-link="editPassword.html">
+                        비밀번호수정
+                    </button>
+                    <button type="button" class="dropdown-link" data-link="login.html">
+                        로그아웃
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="content post-edit-content">
+            <h2 class="page-title">게시글 작성</h2>
+
+            <form class="post-edit-box" id="makePostForm" novalidate>
+                <div class="post-form-group">
+                    <label for="title">제목*</label>
+                    <input 
+                        type="text" 
+                        id="title" 
+                        placeholder="제목을 입력해주세요. (최대 26글자)"
+                        maxlength="26"
+                    >
+                </div>
+
+                <div class="post-form-group">
+                    <label for="content">내용*</label>
+                    <textarea 
+                        id="content" 
+                        placeholder="내용을 입력해주세요."
+                    ></textarea>
+                    <span class="helper-text" id="postHelper"></span>
+                </div>
+
+                <div class="post-form-group image-upload-group">
+                    <label for="image">이미지</label>
+
+                    <div class="image-upload-row">
+                        <input 
+                            type="file" 
+                            id="image"
+                            accept="image/*"
+                        >
+                        <span class="file-name" id="fileName">파일을 선택해주세요.</span>
+                    </div>
+                </div>
+
+                <button 
+                    type="submit" 
+                    class="post-submit-button btn-inactive"
+                    id="makePostSubmitButton"
+                >
+                    완료
+                </button>
+            </form>
+        </main>
+    </div>
+    <script src="./js/api.js"></script>
+    <script src="./js/makePost.js"></script>
+</body>
+</html>
