@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 상세조회</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <header class="header">
+            <button 
+                type="button" 
+                class="back-button"
+                id="backButton"
+            >
+                ‹
+            </button>
+
+            아무 말 대잔치
+
+            <div class="profile-menu-wrap">
+                <button type="button" class="header-profile-button" id="profileButton">
+                    <img src="./images/profile.png" alt="프로필 이미지">
+                </button>
+
+                <div class="profile-dropdown" id="profileDropdown">
+                    <button type="button" class="dropdown-link" data-link="editProfile.html">
+                        회원정보수정
+                    </button>
+                    <button type="button" class="dropdown-link" data-link="editPassword.html">
+                        비밀번호수정
+                    </button>
+                    <button type="button" class="dropdown-link" data-link="login.html">
+                        로그아웃
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="content post-detail-content">
+            <section class="post-detail-container">
+                <div class="post-detail-header">
+                    <h2 class="detail-title" id="postTitle">제목 1</h2>
+
+                    <div class="detail-info-row">
+                        <div class="detail-author-info">
+                            <div class="author-image"></div>
+                            <span class="author-name" id="postAuthor">더미 작성자 1</span>
+
+
+                            <span class="detail-date" id="postCreatedAt">2021-01-01 00:00:00</span>
+                        </div>
+
+                        <div class="detail-button-group">
+                            <button 
+                                type="button" 
+                                class="small-outline-button"
+                                id="editPostButton"
+                            >
+                                수정
+                            </button>
+
+                            <button 
+                                type="button" 
+                                class="small-outline-button"
+                                id="postDeleteButton"
+                            >
+                                삭제
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <img 
+                    class="detail-image-box"
+                    id="postImage"
+                    alt="게시글 이미지"
+                    style="display: none;"
+                >
+
+                <p class="detail-content-text" id="postContent">
+                    무엇을 얘기할까요? 아무말이라면, 삶은 항상 놀라운 모험이라고 생각합니다.
+                    우리는 매일 새로운 경험을 하고 배우며 성장합니다. 때로는 어려움과 도전이 있지만,
+                    그것들이 우리를 더 강하고 지혜롭게 만듭니다. 또한 우리는 주변의 사람들과 연결되어
+                    사랑과 지지를 받습니다. 그래서 우리의 삶은 소중하고 의미가 있습니다.
+                    <br>
+                    자연도 아름다운 이야기입니다. 우리 주변의 자연은 끝없는 아름다움과 신비로움을 담고 있습니다.
+                    산, 바다, 숲, 하늘 등 모든 것이 우리를 놀라게 만들고 감동시킵니다.
+                    자연은 우리의 생활과 안정을 지키며 우리에게 쉼을 주는 곳입니다.
+                    <br>
+                    마지막으로, 지식을 향한 탐구는 항상 흥미로운 여정입니다. 우리는 끝없는 지식의 바다에서 배우고
+                    발견할 수 있으며, 이것이 우리를 더 깊이 이해하고 세상을 더 넓게 보게 해줍니다.
+                </p>
+
+                <div class="detail-count-box">
+                    <button type="button" class="count-item like-button" id="likeButton">
+                        <strong id="likeCount" data-count="123">123</strong>
+                        <span>좋아요수</span>
+                    </button>
+
+                    <div class="count-item">
+                        <!-- 수정: id 추가 -->
+                        <strong class="detail-count" id="postViewCount" data-count="123">123</strong>
+                        <span>조회수</span>
+                    </div>
+
+                    <div class="count-item">
+                        <strong id="commentCount" data-count="2">2</strong>
+                        <span>댓글</span>
+                    </div>
+                </div>
+
+                <section class="comment-write-box">
+                    <textarea 
+                        id="commentInput"
+                        placeholder="댓글을 남겨주세요!"
+                    ></textarea>
+
+                    <div class="comment-submit-row">
+                        <button 
+                            type="button" 
+                            class="comment-submit-button"
+                            id="commentSubmitButton"
+                        >
+                            댓글 등록
+                        </button>
+                    </div>
+                </section>
+
+                <section class="comment-list" id="commentList">
+                    <article class="comment-item">
+                        <div class="comment-top">
+                            <div class="detail-author-info">
+                                <div class="author-image"></div>
+                                <span class="author-name">더미 작성자 1</span>
+                                <span class="detail-date">2021-01-01 00:00:00</span>
+                            </div>
+
+                            <div class="detail-button-group">
+                                <button 
+                                    type="button" 
+                                    class="small-outline-button comment-edit-button"
+                                >
+                                    수정
+                                </button>
+
+                                <button 
+                                    type="button" 
+                                    class="small-outline-button comment-delete-button"
+                                >
+                                    삭제
+                                </button>
+                            </div>
+                        </div>
+
+                        <p class="comment-text">댓글 내용</p>
+                    </article>
+
+                    <article class="comment-item">
+                        <div class="comment-top">
+                            <div class="detail-author-info">
+                                <div class="author-image"></div>
+                                <span class="author-name">더미 작성자 1</span>
+                                <span class="detail-date">2021-01-01 00:00:00</span>
+                            </div>
+
+                            <div class="detail-button-group">
+                                <button 
+                                    type="button" 
+                                    class="small-outline-button comment-edit-button"
+                                >
+                                    수정
+                                </button>
+
+                                <button 
+                                    type="button" 
+                                    class="small-outline-button comment-delete-button"
+                                >
+                                    삭제
+                                </button>
+                            </div>
+                        </div>
+
+                        <p class="comment-text">댓글 내용</p>
+                    </article>
+                </section>
+            </section>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="postDeleteModal">
+        <div class="modal-box">
+            <h3>게시글을 삭제하시겠습니까?</h3>
+            <p>삭제한 내용은 복구 할 수 없습니다.</p>
+
+            <div class="modal-button-group">
+                <button 
+                    type="button" 
+                    class="btn-cancel"
+                    id="postDeleteCancelButton"
+                >
+                    취소
+                </button>
+
+                <button 
+                    type="button" 
+                    class="btn-confirm"
+                    id="postDeleteConfirmButton"
+                >
+                    확인
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="commentDeleteModal">
+        <div class="modal-box">
+            <h3>댓글을 삭제하시겠습니까?</h3>
+            <p>삭제한 내용은 복구 할 수 없습니다.</p>
+
+            <div class="modal-button-group">
+                <button 
+                    type="button" 
+                    class="btn-cancel"
+                    id="commentDeleteCancelButton"
+                >
+                    취소
+                </button>
+
+                <button 
+                    type="button" 
+                    class="btn-confirm"
+                    id="commentDeleteConfirmButton"
+                >
+                    확인
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/api.js"></script>
+    <script src="./js/post.js"></script>
+</body>
+</html>

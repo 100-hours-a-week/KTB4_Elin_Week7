@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <header class="header">
+            아무 말 대잔치
+        </header>
+
+        <main class="content">
+            <h2 class="page-title">로그인</h2>
+            
+            <form class="login-box" id="loginForm" novalidate>
+                <div class="input-group">
+                    <label for="email">이메일</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        placeholder="이메일을 입력하세요"
+                    >
+                    <span class="helper-text" id="emailHelper"></span>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">비밀번호</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        placeholder="비밀번호를 입력하세요"
+                    >
+                    <span class="helper-text" id="passwordHelper"></span>
+                </div>
+
+                <button type="submit" class="btn-login btn-inactive" id="loginButton">
+                    로그인
+                </button>
+
+                <button type="button" class="btn-signup" id="signupButton">
+                    회원가입
+                </button>
+            </form>
+        </main>
+    </div>
+    <script src="./js/api.js"></script>
+    <script src="./js/login.js"></script>
+</body>
+</html>
