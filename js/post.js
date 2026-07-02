@@ -56,6 +56,103 @@ document.addEventListener("DOMContentLoaded", function () {
         return count;
     }
 
+    function renderPost(post) {
+        postTitle.textContent = post.title;
+        postAuthor.textContent = post.nickname;
+        postCreatedAt.textContent = post.createdAt;
+        postContent.textContent = post.content;
+
+        postViewCount.dataset.count = post.viewCount ?? 0;
+        postViewCount.textContent = formatCount(Number(postViewCount.dataset.count));
+
+        likeCount.dataset.count = post.likeCount ?? 0;
+        likeCount.textContent = formatCount(Number(likeCount.dataset.count));
+
+        commentCount.dataset.count = post.commentCount ?? 0;
+        commentCount.textContent = formatCount(Number(commentCount.dataset.count));
+
+        const contentImage = post.contentImage;
+
+        if (
+            contentImage &&
+            contentImage !== "null" &&
+            contentImage !== "undefined"
+        ) {
+            postImage.src = contentImage;
+            postImage.style.display = "block";
+        } else {
+            postImage.removeAttribute("src");
+            postImage.style.display = "none";
+        }
+    }
+    async function requestPost() {
+        try {
+
+            const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+                method: "GET"
+            });
+
+            const result = await response.json();
+
+            console.log("게시글 status:", response.status);
+            console.log("게시글 응답:", result);
+
+            if (!response.ok) {
+                alert("게시글을 불러오지 못했습니다.");
+                return;
+            }
+
+            const post = result.data;
+
+            renderPost(post);
+
+        } catch (error) {
+            console.error(error);
+            alert("서버와 연결할 수 없습니다.");
+        }
+    }
+    
+    async function requestDeletePost() {
+        if (!loginUserId || loginUserId === "undefined") {
+            alert("로그인이 필요합니다.");
+            location.href = "./login.html";
+            return;
+        }
+        
+        try {
+            const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+                method: "DELETE",
+                headers: {
+                    "X-USER-ID": loginUserId
+                }
+            });
+
+            console.log("게시글 삭제 status:", response.status);
+
+            if (response.status === 204) {
+                alert("게시글이 삭제되었습니다.");
+                location.href = "posts.html";
+                return;
+            }
+
+            if (response.status === 403) {
+                alert("게시글을 삭제할 권한이 없습니다.");
+                return;
+            }
+
+            if (response.status === 404) {
+                alert("게시글을 찾을 수 없습니다.");
+                return;
+            }
+
+            alert("게시글 삭제에 실패했습니다.");
+        } catch (error) {
+            console.error(error);
+            alert("서버와 연결할 수 없습니다.");
+        }
+    }
+
+    
     function prepareCounts() {
         const likeNumber = Number(likeCount.dataset.count);
         likeCount.textContent = formatCount(likeNumber);
@@ -130,33 +227,33 @@ document.addEventListener("DOMContentLoaded", function () {
         return article;
     }
     async function requestComments() {
-    try {
-        const response = await fetch(
-            `${API_BASE_URL}/posts/${postId}/comments`
-        );
+        try {
+            const response = await fetch(
+                `${API_BASE_URL}/posts/${postId}/comments`
+            );
 
-        const result = await response.json();
+            const result = await response.json();
 
-        console.log("댓글 목록 status:", response.status);
-        console.log("댓글 목록 응답:", result);
+            console.log("댓글 목록 status:", response.status);
+            console.log("댓글 목록 응답:", result);
 
-        if (!response.ok) {
+            if (!response.ok) {
+                alert("댓글을 불러오지 못했습니다.");
+                return;
+            }
+
+            commentList.innerHTML = "";
+
+            result.data.forEach(function (comment) {
+                commentList.appendChild(createCommentItem(comment));
+            });
+
+            updateCommentCount();
+        } catch (error) {
+            console.error(error);
             alert("댓글을 불러오지 못했습니다.");
-            return;
         }
-
-        commentList.innerHTML = "";
-
-        result.data.forEach(function (comment) {
-            commentList.appendChild(createCommentItem(comment));
-        });
-
-        updateCommentCount();
-    } catch (error) {
-        console.error(error);
-        alert("댓글을 불러오지 못했습니다.");
     }
-}
 
     async function requestCreateComment(content) {
         try {
@@ -232,134 +329,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return false;
         }
     }
-    
-    function renderPost(post) {
-        postTitle.textContent = post.title;
-        postAuthor.textContent = post.nickname;
-        postCreatedAt.textContent = post.createdAt;
-        postContent.textContent = post.content;
-
-        postViewCount.dataset.count = post.viewCount ?? 0;
-        postViewCount.textContent = formatCount(Number(postViewCount.dataset.count));
-
-        likeCount.dataset.count = post.likeCount ?? 0;
-        likeCount.textContent = formatCount(Number(likeCount.dataset.count));
-
-        commentCount.dataset.count = post.commentCount ?? 0;
-        commentCount.textContent = formatCount(Number(commentCount.dataset.count));
-
-        const contentImage = post.contentImage;
-
-        if (
-            contentImage &&
-            contentImage !== "null" &&
-            contentImage !== "undefined"
-        ) {
-            postImage.src = contentImage;
-            postImage.style.display = "block";
-        } else {
-            postImage.removeAttribute("src");
-            postImage.style.display = "none";
-        }
-    }
-    async function requestPost() {
-        try {
-
-            const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
-                method: "GET"
-            });
-
-            const result = await response.json();
-
-            console.log("게시글 status:", response.status);
-            console.log("게시글 응답:", result);
-
-            if (!response.ok) {
-                alert("게시글을 불러오지 못했습니다.");
-                return;
-            }
-
-            const post = result.data;
-
-            renderPost(post);
-
-        } catch (error) {
-            console.error(error);
-            alert("서버와 연결할 수 없습니다.");
-        }
-    }
-    async function requestEditPost() {
-        try {
-            const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
-                method: "PATCH",
-                headers: {
-                    "X-USER-ID": loginUserId
-                }
-            });
-
-            console.log("게시글 수정 status:", response.status);
-
-            if (response.status === 204) {
-                alert("게시글이 수정되었습니다.");
-                location.href = "posts.html";
-                return;
-            }
-
-            if (response.status === 403) {
-                alert("게시글을 삭제할 권한이 없습니다.");
-                return;
-            }
-
-            if (response.status === 404) {
-                alert("게시글을 찾을 수 없습니다.");
-                return;
-            }
-
-            alert("게시글 삭제에 실패했습니다.");
-        } catch (error) {
-            console.error(error);
-            alert("서버와 연결할 수 없습니다.");
-        }
-    }
-    async function requestDeletePost() {
-        if (!loginUserId || loginUserId === "undefined") {
-            alert("로그인이 필요합니다.");
-            location.href = "./login.html";
-            return;
-        }
-        
-        try {
-            const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
-                method: "DELETE",
-                headers: {
-                    "X-USER-ID": loginUserId
-                }
-            });
-
-            console.log("게시글 삭제 status:", response.status);
-
-            if (response.status === 204) {
-                alert("게시글이 삭제되었습니다.");
-                location.href = "posts.html";
-                return;
-            }
-
-            if (response.status === 403) {
-                alert("게시글을 삭제할 권한이 없습니다.");
-                return;
-            }
-
-            if (response.status === 404) {
-                alert("게시글을 찾을 수 없습니다.");
-                return;
-            }
-
-            alert("게시글 삭제에 실패했습니다.");
-        } catch (error) {
-            console.error(error);
-            alert("서버와 연결할 수 없습니다.");
-        }
-    }
 
     async function requestDeleteComment(commentItem) {
         const commentId = commentItem.dataset.commentId;
@@ -401,6 +370,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return false;
         }
     }
+    
     backButton.addEventListener("click", function () {
         location.href = "posts.html";
     });
