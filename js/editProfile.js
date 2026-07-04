@@ -19,22 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const withdrawCancelButton = document.querySelector("#withdrawCancelButton");
     const withdrawConfirmButton = document.querySelector("#withdrawConfirmButton");
 
-    function isValidNickname(nickname) {
-        if (nickname.length === 0) {
-            return false;
-        }
-
-        if (nickname.includes(" ")) {
-            return false;
-        }
-
-        if (nickname.length > 10) {
-            return false;
-        }
-
-        return true;
-    }
-
     function validateNickname(showMessage) {
         const nickname = nicknameInput.value.trim();
 
@@ -200,6 +184,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         updateEditButtonState();
 
+        if (!isNicknameValid) {
+            return;
+        }
         const success = await requestUpdateProfile();
 
         if (!success) {

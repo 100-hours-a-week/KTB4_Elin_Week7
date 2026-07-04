@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const dropdownLinks = document.querySelectorAll(".dropdown-link");
 
     const editPostButton = document.querySelector("#editPostButton");
+    const postButtonGroup = document.querySelector("#postButtonGroup");
     const postDeleteButton = document.querySelector("#postDeleteButton");
     const postDeleteModal = document.querySelector("#postDeleteModal");
     const postDeleteCancelButton = document.querySelector("#postDeleteCancelButton");
@@ -40,36 +41,34 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectedComment = null;
     let editingComment = null;
 
-    function formatCount(count) {
-        if (count >= 100000) {
-            return "100k";
-        }
-
-        if (count >= 10000) {
-            return "10k";
-        }
-
-        if (count >= 1000) {
-            return "1k";
-        }
-
-        return count;
+    if (!postId || postId === "null" || postId === "undefined") {
+        alert("게시글 정보가 없습니다.");
+        location.href = "./posts.html";
+        return;
     }
+
+    
 
     function renderPost(post) {
         postTitle.textContent = post.title;
         postAuthor.textContent = post.nickname;
-        postCreatedAt.textContent = post.createdAt;
+        postCreatedAt.textContent = formatDateTime(post.createdAt);
         postContent.textContent = post.content;
 
         postViewCount.dataset.count = post.viewCount ?? 0;
-        postViewCount.textContent = formatCount(Number(postViewCount.dataset.count));
-
         likeCount.dataset.count = post.likeCount ?? 0;
-        likeCount.textContent = formatCount(Number(likeCount.dataset.count));
-
         commentCount.dataset.count = post.commentCount ?? 0;
-        commentCount.textContent = formatCount(Number(commentCount.dataset.count));
+        const isPostAuthor =
+            loginUserId !== null && String(post.userId) === String(loginUserId);
+
+        if (isPostAuthor) {
+            postButtonGroup.hidden = false;
+        } else {
+            postButtonGroup.remove();
+        }
+
+
+        prepareCounts();
 
         const contentImage = post.contentImage;
 
@@ -187,9 +186,7 @@ document.addEventListener("DOMContentLoaded", function () {
         article.className = "comment-item";
         article.dataset.commentId = comment.commentId;
 
-        const isAuthor =
-            loginUserId !== null &&
-            String(comment.userId) === String(loginUserId);
+        const isCommentAuthor = loginUserId !== null && String(comment.userId) === String(loginUserId);
 
         article.innerHTML = `
             <div class="comment-top">
@@ -217,10 +214,14 @@ document.addEventListener("DOMContentLoaded", function () {
         article.querySelector(".author-name").textContent =
             comment.nickname || "알 수 없음";
 
+        article.querySelector(".detail-date").textContent =
+            formatDateTime(comment.createdAt);
+            
         article.querySelector(".comment-text").textContent =
             comment.content;
+        
 
-        if (!isAuthor) {
+        if (!isCommentAuthor) {
             article.querySelector(".detail-button-group").remove();
         }
 
@@ -238,6 +239,9 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("댓글 목록 응답:", result);
 
             if (!response.ok) {
+                commentList.innerHTML = "";
+                commentCount.dataset.count = 0;
+                prepareCounts();
                 alert("댓글을 불러오지 못했습니다.");
                 return;
             }
@@ -251,6 +255,9 @@ document.addEventListener("DOMContentLoaded", function () {
             updateCommentCount();
         } catch (error) {
             console.error(error);
+            commentList.innerHTML = "";
+            commentCount.dataset.count = 0;
+            prepareCounts();
             alert("댓글을 불러오지 못했습니다.");
         }
     }
@@ -430,31 +437,41 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     commentSubmitButton.addEventListener("click", async function () {
+        if (commentSubmitButton.disabled) {
+            return;
+        }
+
         const content = commentInput.value.trim();
 
         if (content.length === 0) {
             return;
         }
 
-        let success;
+        commentSubmitButton.disabled = true;
 
-        if (editingComment) {
-            success = await requestUpdateComment(editingComment, content);
+        try {
+            let success;
 
-            if (success) {
-                editingComment = null;
-                commentSubmitButton.textContent = "댓글 등록";
+            if (editingComment) {
+                success = await requestUpdateComment(editingComment, content);
+
+                if (success) {
+                    editingComment = null;
+                    commentSubmitButton.textContent = "댓글 등록";
+                }
+            } else {
+                success = await requestCreateComment(content);
             }
-        } else {
-            success = await requestCreateComment(content);
-        }
 
-        if (!success) {
-            return;
-        }
+            if (!success) {
+                return;
+            }
 
-        commentInput.value = "";
-        updateCommentSubmitButtonState();
+            commentInput.value = "";
+            updateCommentSubmitButtonState();
+        } finally {
+            commentSubmitButton.disabled = false;
+        }
     });
 
 
@@ -501,7 +518,6 @@ document.addEventListener("DOMContentLoaded", function () {
         commentDeleteModal.classList.remove("show");
     });
 
-    prepareCounts();
     updateCommentSubmitButtonState();
 
     requestPost();

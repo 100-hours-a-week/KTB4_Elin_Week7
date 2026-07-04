@@ -10,17 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const loginButton = document.querySelector("#loginButton");
     const signupButton = document.querySelector("#signupButton");
 
-    function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
-    function isValidPassword(password) {
-        const passwordRegex =
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:'",.<>/?\\|`~]).{8,20}$/;
-
-        return passwordRegex.test(password);
-    }
 
     function validateEmail(showMessage) {
         const email = emailInput.value.trim();
