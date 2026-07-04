@@ -15,13 +15,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const editPasswordButton = document.querySelector("#editPasswordButton");
     const editPasswordToast = document.querySelector("#editPasswordToast");
 
-    function isValidPassword(password) {
-        const passwordRegex =
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:'",.<>/?\\|`~]).{8,20}$/;
-
-        return passwordRegex.test(password);
-    }
-
     function validatePassword(showMessage) {
         const password = passwordInput.value.trim();
 
@@ -154,6 +147,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const isPasswordCheckValid = validatePasswordCheck(true);
 
         updateEditPasswordButtonState();
+
+        if (!isPasswordValid || !isPasswordCheckValid) {
+            return;
+        }
 
         const success = await requestUpdatePassword();
 

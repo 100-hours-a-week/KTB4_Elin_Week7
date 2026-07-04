@@ -22,22 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let selectedProfileImage = null;
 
-    function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
-    function isValidPassword(password) {
-        const passwordRegex =
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:'",.<>/?\\|`~]).{8,20}$/;
-
-        return passwordRegex.test(password);
-    }
-
-    function isValidNickname(nickname) {
-        const nicknameRegex = /^[^\s]{1,10}$/;
-        return nicknameRegex.test(nickname);
-    }
 
     function validateProfile(showMessage) {
         if (!selectedProfileImage) {
@@ -305,3 +289,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updateSignupButtonState();
 });
+
+

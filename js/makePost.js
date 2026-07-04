@@ -141,6 +141,10 @@ document.addEventListener("DOMContentLoaded", function () {
     makePostForm.addEventListener("submit", async function (event) {
         event.preventDefault();
 
+        if (makePostSubmitButton.disabled) {
+            return;
+        }
+
         const isPostValid = validatePost(true);
 
         updateSubmitButtonState();
@@ -149,8 +153,14 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        await requestCreatePost();
-    });
+        makePostSubmitButton.disabled = true;
 
+        try {
+            await requestCreatePost();
+        } finally {
+            makePostSubmitButton.disabled = false;
+            updateSubmitButtonState();
+        }
+    });
     updateSubmitButtonState();
 });

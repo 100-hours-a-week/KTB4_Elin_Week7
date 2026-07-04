@@ -23,29 +23,23 @@ document.addEventListener("DOMContentLoaded", function () {
         return safeTitle;
     }
 
-    function formatCount(count) {
-        if (count >= 100000) {
-            return "100k";
-        }
+    function showPostListMessage(message) {
+        postList.innerHTML = "";
 
-        if (count >= 10000) {
-            return "10k";
-        }
+        const messageElement = document.createElement("p");
+        messageElement.textContent = message;
 
-        if (count >= 1000) {
-            return "1k";
-        }
+        postList.appendChild(messageElement);
 
-        return count;
+        postCards = [];
+        shownCount = 0;
     }
 
     function renderPosts(posts) {
         postList.innerHTML = "";
 
         if (posts.length === 0) {
-            const emptyMessage = document.createElement("p");
-            emptyMessage.textContent = "게시글이 없습니다.";
-            postList.appendChild(emptyMessage);
+            showPostListMessage("게시글이 없습니다.");
             return;
         }
 
@@ -69,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
 
                         <time class="post-date">
-                            ${post.createdAt ?? ""}
+                            ${formatDateTime(post.createdAt)}
                         </time>
                     </div>
                 </div>
@@ -170,6 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("게시글 목록 응답:", result);
 
             if (!response.ok) {
+                showPostListMessage("게시글 목록을 불러오지 못했습니다.");
                 alert("게시글 목록을 불러오지 못했습니다.");
                 return;
             }
@@ -179,6 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
             renderPosts(posts);
         } catch (error) {
             console.error(error);
+            showPostListMessage("서버와 연결할 수 없습니다.");
             alert("서버와 연결할 수 없습니다.");
         }
     }
@@ -193,9 +189,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function logout() {
-    removeLoginUserId();
-    location.href = "./login.html";
-}
+        removeLoginUserId();
+        location.href = "./login.html";
+    }
 
     dropdownLinks.forEach(function (button) {
         button.addEventListener("click", function () {
